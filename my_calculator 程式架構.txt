@@ -1,0 +1,23 @@
+my_calculator.html 程式架構
+
+1. 用 <table> 畫計算機格子，用 <form> 將每一格填入<input type="text">作為顯示或<input type="button>作為按鍵。
+
+2. 主要用到兩個 function:
+	* numPressed(num)：處理數字 0~9 鍵被按下後的動作 
+	* operation(op)：處理 '+', '-', '*', '/', '=' 鍵被按下後的動作
+	
+3. 其它的運算個別寫一個 function 處理，包括：
+	* cleanEntry()：清除最後輸入的一個數據
+	* clean()：清除全部數據
+	* decimal()：小數點處理
+	* neg()：取負值
+	* st()：開根號
+	* percent()：百分比計算
+    * hexChange()：10轉16進位
+	* octChange()：10轉8進位
+	* binChange()：10轉2進位
+	
+4. 可加強部分：
+	* 將 工程型/一般型 個別顯示，透過按鍵或彈出式選單來切換(這要再多做很多工作)
+	* 在顯示幕顯示所有計算內容(如 35+27-16+87-65*2)及計算結果，現階段只顯示計算結果
+	* 可嚐試用 <ul><li> 及 CSS排版來代替 <form>,<table> 的排版顯示
