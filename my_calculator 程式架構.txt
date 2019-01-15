@@ -21,3 +21,6 @@ my_calculator.html 程式架構
 	* 將 工程型/一般型 個別顯示，透過按鍵或彈出式選單來切換(這要再多做很多工作)
 	* 在顯示幕顯示所有計算內容(如 35+27-16+87-65*2)及計算結果，現階段只顯示計算結果
 	* 可嚐試用 <ul><li> 及 CSS排版來代替 <form>,<table> 的排版顯示
+	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	bbbbbbbbbbbbbbbbbbbbbbbbbbbb
+	CSS排版來代替
