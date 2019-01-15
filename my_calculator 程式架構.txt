@@ -24,3 +24,6 @@ my_calculator.html 程式架構
 	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 	bbbbbbbbbbbbbbbbbbbbbbbbbbbb
 	CSS排版來代替
+	decimal
+	cleanEntry
+	function
