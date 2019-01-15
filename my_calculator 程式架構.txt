@@ -29,3 +29,4 @@ my_calculator.html 程式架構
 	function
 	ggg
 	hexChange
+	input
