@@ -1,6 +1,6 @@
 <?php
 include("header.php");
 
-echo '<h2>aaaaaaaaaaaaa</h2)';
+echo '<h2>aaaaaaaaaaaaa</h2>';
 
 ?>
