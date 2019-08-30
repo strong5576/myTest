@@ -7,7 +7,7 @@ function f(){
     }
 };
 
-f(); //undefined
+f(); //undefined(注意：變數hoisting)
 
 //循環變數洩漏為全域變數
 var s = "hello";
