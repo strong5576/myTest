@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JavaScript 複習</title>
+        <link rel="icon" href="calculator_1.jpg" type="image/jpeg" />
+        <!--rel=>relationship, href=>Hypertext Reference -->
+        <style>
+            table{
+                width: 250px;
+                border: 2px solid black;
+            } 
+           
+            input{
+                width:50px;
+                height: 25px;
+                font-size: 110%;
+            }
+
+            .readOut{
+                width:98%;
+                text-align: right;
+                font-size: 150%;
+                border-radius: 5px;
+
+
+            } 
+
+            .btnPlus{
+                width: 50px;
+                height: 55px
+            }
+
+            .btnEqual{
+                background-color: #4169E1;
+                color: white;
+            }
+
+            .btnClean, .btnCleanEntry{
+                background-color: #CD853F;
+                color: white;
+            }  
+        </style>
+    </head>
+    <body>
+        <audio src="audio/click_1.mp3" id="clickAudio" preload="auto"></audio>
+        <form name="keyPad">
+        <table>
+            <tr>
+                <td colspan="5" align="center">
+                    <input type="text" name="readOut" class="readOut" value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnSin" value="sin" onclick="trigono('sin')" />
+                </td>
+                <td>
+                    <input type="button" name="btnCos" value="cos" onclick="trigono('cos')" />
+                </td>
+                <td>
+                    <input type="button" name="btnTan" value="tan" onclick="trigono('tan')" />
+                </td>
+                <td>
+                    <input type="button" name="btnSqre" value="&#8730;" onclick="sqrt()" />
+                </td>
+                <td>
+                    <input type="button" name="btnPw" value="pow" onclick="operation('pow')" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnSeven" value="7" onclick="numPressed('7')" />
+                </td>
+                <td>
+                    <input type="button" name="btnEight" value="8" onclick="numPressed('8')" />
+                </td>
+                <td>
+                    <input type="button" name="btnNine" value="9" onclick="numPressed('9')" />
+                </td>
+                <td>
+                    <input type="button" name="btnClean" class="btnClean"  value="C" 
+                        onclick="clean()" />
+                </td>
+                <td>
+                    <input type="button" name="btnCleanEntry"  class="btnCleanEntry" value="CE"             onclick="cleanEntry()" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnFour" value="4" onclick="numPressed('4')" />
+                </td>
+                <td>
+                    <input type="button" name="btnFive" value="5" onclick="numPressed('5')" />
+                </td>
+                <td>
+                    <input type="button" name="btnSix" value="6" onclick="numPressed('6')" />
+                </td>
+                <td>
+                    <input type="button" name="btnMultiply" value="x" onclick="operation('*')" />
+                </td>
+                <td>
+                    <input type="button" name="btnDivide" value="&#247;" onclick="operation('/')" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnOne" value="1" onclick="numPressed('1')" />
+                </td>
+                <td>
+                    <input type="button" name="btnTwo" value="2" onclick="numPressed('2')" />
+                </td>
+                <td>
+                    <input type="button" name="btnThree" value="3" onclick="numPressed('3')" />
+                </td>
+                <td rowspan="2">
+                    <input type="button" name="btnPlus" class="btnPlus" value="+" 
+                        onclick="operation('+')" />
+                </td>
+                <td>
+                    <input type="button" name="btnMinus" value="-" onclick="operation('-')" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnZero" value="0" onclick="numPressed('0')" />
+                </td>
+                <td>
+                    <input type="button" name="btnDecimal" value="." onclick="decimal()" />
+                </td>
+                <td>
+                    <input type="button" name="btnNeg" value="+/-" onclick="negative()" />
+                </td>
+                <td>
+                    <input type="button" name="btnEqual" value="=" class="btnEqual" 
+                        onclick="operation('=')" />
+                </td>
+            </tr>
+        </table>
+        </form>
+        <script type="text/javascript">
+
+            var keyPad = document.keyPad;
+            var accum = 0;
+            var flagNewNum = false;
+            var pendingOp = "";
+
+            function play(){
+                document.getElementById("clickAudio").play();
+            }
+
+            function numPressed(num){
+                play();
+
+                if(flagNewNum){
+                    keyPad.readOut.value = num;
+                    flagNewNum = false;
+                }
+                else{
+                    if(keyPad.readOut.value == '0'){
+                        keyPad.readOut.value = num;
+                    }
+                    else{
+                        keyPad.readOut.value += num;
+                    }
+                }
+            }
+
+            function operation(op){
+                play();
+
+                var readOut = keyPad.readOut.value;
+                if(flagNewNum && pendingOp != "="){}
+                else{
+                    flagNewNum = true;
+
+                    if(pendingOp == "+"){
+                        accum += parseFloat(readOut);
+                    }
+                    else if(pendingOp == "-"){
+                        accum -= parseFloat(readOut);
+                    }
+                    else if(pendingOp == "*"){
+                        accum *= parseFloat(readOut);
+                    }
+                    else if(pendingOp == "/"){
+                        accum /= parseFloat(readOut); 
+                    }
+                    else if(pendingOp == "pow"){
+
+                        accum = Math.pow(accum, parseFloat(readOut));
+                    }
+                    else{
+                        accum = parseFloat(readOut);
+                    }
+
+                    keyPad.readOut.value = accum;
+                    pendingOp = op;
+                }
+            }
+
+            function cleanEntry(){
+                play();
+                keyPad.readOut.value = "0"
+                flagNewNum = true;
+            }
+
+            function clean(){
+                play();
+                accum = 0;
+                pendingOp = "";
+                keyPad.readOut.value = "0";
+            }
+
+            function decimal(){
+                play();
+                var curReadout = keyPad.readOut.value;
+                if(flagNewNum){
+                    keyPad.readOut.value = '0.';
+                    flagNewNum = false;
+                }
+                else{
+                    if(curReadout.indexOf('.') == -1){
+                        keyPad.readOut.value = curReadout + '.';
+                    }
+                }
+            }
+
+            function negative(){
+                play();
+                keyPad.readOut.value = parseFloat(keyPad.readOut.value) * -1;
+            }
+
+            function sqrt(){
+                play();
+                keyPad.readOut.value = Math.sqrt(parseFloat(keyPad.readOut.value))
+            }
+            
+            function trigono(method){
+                play();
+                //degree to radian 換算
+                var rad = (parseFloat(keyPad.readOut.value)/180) * Math.PI;
+                if(method == 'sin'){
+                    keyPad.readOut.value = Math.sin(rad);
+                }
+                else if(method == 'cos'){
+                    keyPad.readOut.value = Math.cos(rad);
+                }
+                else if(method =='tan'){
+                    keyPad.readOut.value = Math.tan(rad);
+                }               
+            }
+
+
+        </script>
+    </body>
+</html>
