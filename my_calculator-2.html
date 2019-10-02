@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>計算器 - JavaScript 複習</title>
+        <title>Calculator-2</title>
         <link rel="icon" href="calculator_1.jpg" type="image/jpeg" />
         <!--rel=>relationship, href=>Hypertext Reference -->
         <style>
@@ -17,12 +17,17 @@
             }
 
             .readOut{
-                width:98%;
+                width: 98%;
                 text-align: right;
                 font-size: 150%;
                 border-radius: 5px;
                 background-color: #E0FFFF;
             } 
+
+            .showOut{
+                width: 98%;
+                text-align: right;
+            }
 
             .btnPlus{
                 width: 50px;
@@ -41,9 +46,14 @@
         </style>
     </head>
     <body>
-        <audio src="audio/click_1.mp3" id="clickAudio" preload="auto"></audio>
+        <audio src="audio/click_2.mp3" id="clickAudio" preload="auto"></audio>
         <form name="keyPad">
         <table>
+            <tr>
+                <td colspan="5" align="center">
+                    <input type="text" name="showOut" class="showOut" value="" />
+                </td>
+            </tr>
             <tr>
                 <td colspan="5" align="center">
                     <input type="text" name="readOut" class="readOut" value="0" />
@@ -142,6 +152,7 @@
             var accum = 0;
             var flagNewNum = false;
             var pendingOp = "";
+            var tempDisplay = "";
 
             function play(){
                 document.getElementById("clickAudio").play();
@@ -149,6 +160,8 @@
 
             function numPressed(num){
                 play();
+                tempDisplay += num;
+                display(tempDisplay);
 
                 if(flagNewNum){
                     keyPad.readOut.value = num;
@@ -166,6 +179,8 @@
 
             function operation(op){
                 play();
+                tempDisplay += op;
+                display(tempDisplay);
 
                 var readOut = keyPad.readOut.value;
                 if(flagNewNum && pendingOp != "="){}
@@ -197,6 +212,10 @@
                 }
             }
 
+            function display(str){
+                keyPad.showOut.value = str;
+            }
+
             function cleanEntry(){
                 play();
                 keyPad.readOut.value = "0"
@@ -208,6 +227,8 @@
                 accum = 0;
                 pendingOp = "";
                 keyPad.readOut.value = "0";
+                tempDisplay = "";
+                keyPad.showOut.value = "";
             }
 
             function decimal(){
