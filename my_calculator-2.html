@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Calculator-2</title>
+        <title>Calculator-1</title>
         <link rel="icon" href="calculator_1.jpg" type="image/jpeg" />
         <!--rel=>relationship, href=>Hypertext Reference -->
         <style>
@@ -73,7 +73,7 @@
                     <input type="button" name="btnSqre" value="&#8730;" onclick="sqrt()" />
                 </td>
                 <td>
-                    <input type="button" name="btnPw" value="pow" onclick="operation('pow')" />
+                    <input type="button" name="btnPw" value="pow" onclick="operation('^')" />
                 </td>
             </tr>
             <tr>
@@ -152,7 +152,8 @@
             var accum = 0;
             var flagNewNum = false;
             var pendingOp = "";
-            var tempDisplay = "";
+            var showStr = "";
+            var tempStr = "";
 
             function play(){
                 document.getElementById("clickAudio").play();
@@ -160,8 +161,9 @@
 
             function numPressed(num){
                 play();
-                tempDisplay += num;
-                display(tempDisplay);
+
+                showStr += num;
+                display();
 
                 if(flagNewNum){
                     keyPad.readOut.value = num;
@@ -179,8 +181,11 @@
 
             function operation(op){
                 play();
-                tempDisplay += op;
-                display(tempDisplay);
+
+                if(op != '='){
+                    showStr += op;
+                    display();
+                }
 
                 var readOut = keyPad.readOut.value;
                 if(flagNewNum && pendingOp != "="){}
@@ -199,7 +204,7 @@
                     else if(pendingOp == "/"){
                         accum /= parseFloat(readOut); 
                     }
-                    else if(pendingOp == "pow"){
+                    else if(pendingOp == "^"){
 
                         accum = Math.pow(accum, parseFloat(readOut));
                     }
@@ -212,14 +217,19 @@
                 }
             }
 
-            function display(str){
-                keyPad.showOut.value = str;
+            function display(){
+                keyPad.showOut.value = showStr;
             }
-
+            //???????????????
             function cleanEntry(){
                 play();
                 keyPad.readOut.value = "0"
                 flagNewNum = true;
+                showStr = showStr.slice(0,-1);
+                keyPad.showOut.value = showStr;
+                if(showStr != ""){
+                    keyPad.readOut.value = eval(showStr); //pending
+                }                
             }
 
             function clean(){
@@ -227,12 +237,16 @@
                 accum = 0;
                 pendingOp = "";
                 keyPad.readOut.value = "0";
-                tempDisplay = "";
                 keyPad.showOut.value = "";
+                showStr = "";
             }
 
             function decimal(){
                 play();
+
+                showStr += '.';
+                display();
+
                 var curReadout = keyPad.readOut.value;
                 if(flagNewNum){
                     keyPad.readOut.value = '0.';
@@ -252,11 +266,14 @@
 
             function sqrt(){
                 play();
-                keyPad.readOut.value = Math.sqrt(parseFloat(keyPad.readOut.value))
+                showStr = "Math.sqrt(" + keyPad.readOut.value +")";
+                keyPad.showOut.value = showStr;
+                keyPad.readOut.value = eval(showStr);
             }
             
             function trigono(method){
                 play();
+                showStr
                 //degree to radian 換算
                 var rad = (parseFloat(keyPad.readOut.value)/180) * Math.PI;
                 if(method == 'sin'){

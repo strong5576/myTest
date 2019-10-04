@@ -61,30 +61,30 @@
             </tr>
             <tr>
                 <td>
-                    <input type="button" name="btnSin" value="sin" onclick="trigono('sin')" />
+                    <input type="button" name="btnSin" value="sin" onclick="display('sin')" />
                 </td>
                 <td>
-                    <input type="button" name="btnCos" value="cos" onclick="trigono('cos')" />
+                    <input type="button" name="btnCos" value="cos" onclick="display('cos')" />
                 </td>
                 <td>
-                    <input type="button" name="btnTan" value="tan" onclick="trigono('tan')" />
+                    <input type="button" name="btnTan" value="tan" onclick="display('tan')" />
                 </td>
                 <td>
-                    <input type="button" name="btnSqre" value="&#8730;" onclick="sqrt()" />
+                    <input type="button" name="btnSqre" value="&#8730;" onclick="display('sqrt')" />
                 </td>
                 <td>
-                    <input type="button" name="btnPw" value="pow" onclick="operation('pow')" />
+                    <input type="button" name="btnPw" value="pow" onclick="display('pow')" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="button" name="btnSeven" value="7" onclick="numPressed('7')" />
+                    <input type="button" name="btnSeven" value="7" onclick="display('7')" />
                 </td>
                 <td>
-                    <input type="button" name="btnEight" value="8" onclick="numPressed('8')" />
+                    <input type="button" name="btnEight" value="8" onclick="display('8')" />
                 </td>
                 <td>
-                    <input type="button" name="btnNine" value="9" onclick="numPressed('9')" />
+                    <input type="button" name="btnNine" value="9" onclick="display('9')" />
                 </td>
                 <td>
                     <input type="button" name="btnClean" class="btnClean"  value="C" 
@@ -96,52 +96,52 @@
             </tr>
             <tr>
                 <td>
-                    <input type="button" name="btnFour" value="4" onclick="numPressed('4')" />
+                    <input type="button" name="btnFour" value="4" onclick="display('4')" />
                 </td>
                 <td>
-                    <input type="button" name="btnFive" value="5" onclick="numPressed('5')" />
+                    <input type="button" name="btnFive" value="5" onclick="display('5')" />
                 </td>
                 <td>
-                    <input type="button" name="btnSix" value="6" onclick="numPressed('6')" />
+                    <input type="button" name="btnSix" value="6" onclick="display('6')" />
                 </td>
                 <td>
-                    <input type="button" name="btnMultiply" value="x" onclick="operation('*')" />
+                    <input type="button" name="btnMultiply" value="x" onclick="display('*')" />
                 </td>
                 <td>
-                    <input type="button" name="btnDivide" value="&#247;" onclick="operation('/')" />
+                    <input type="button" name="btnDivide" value="&#247;" onclick="display('/')" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="button" name="btnOne" value="1" onclick="numPressed('1')" />
+                    <input type="button" name="btnOne" value="1" onclick="display('1')" />
                 </td>
                 <td>
-                    <input type="button" name="btnTwo" value="2" onclick="numPressed('2')" />
+                    <input type="button" name="btnTwo" value="2" onclick="display('2')" />
                 </td>
                 <td>
-                    <input type="button" name="btnThree" value="3" onclick="numPressed('3')" />
+                    <input type="button" name="btnThree" value="3" onclick="display('3')" />
                 </td>
                 <td rowspan="2">
                     <input type="button" name="btnPlus" class="btnPlus" value="+" 
-                        onclick="operation('+')" />
+                        onclick="display('+')" />
                 </td>
                 <td>
-                    <input type="button" name="btnMinus" value="-" onclick="operation('-')" />
+                    <input type="button" name="btnMinus" value="-" onclick="display('-')" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="button" name="btnZero" value="0" onclick="numPressed('0')" />
+                    <input type="button" name="btnZero" value="0" onclick="display('0')" />
                 </td>
                 <td>
-                    <input type="button" name="btnDecimal" value="." onclick="decimal()" />
+                    <input type="button" name="btnDecimal" value="." onclick="display('.')" />
                 </td>
                 <td>
                     <input type="button" name="btnNeg" value="+/-" onclick="negative()" />
                 </td>
                 <td>
                     <input type="button" name="btnEqual" value="=" class="btnEqual" 
-                        onclick="operation('=')" />
+                        onclick="display('=')" />
                 </td>
             </tr>
         </table>
@@ -149,126 +149,32 @@
         <script type="text/javascript">
 
             var keyPad = document.keyPad;
-            var accum = 0;
-            var flagNewNum = false;
-            var pendingOp = "";
-            var tempDisplay = "";
+            var strExp = "";
+            var strShow = "";
 
             function play(){
                 document.getElementById("clickAudio").play();
             }
 
-            function numPressed(num){
-                play();
-                tempDisplay += num;
-                display(tempDisplay);
-
-                if(flagNewNum){
-                    keyPad.readOut.value = num;
-                    flagNewNum = false;
-                }
-                else{
-                    if(keyPad.readOut.value == '0'){
-                        keyPad.readOut.value = num;
-                    }
-                    else{
-                        keyPad.readOut.value += num;
-                    }
-                }
-            }
-
-            function operation(op){
-                play();
-                tempDisplay += op;
-                display(tempDisplay);
-
-                var readOut = keyPad.readOut.value;
-                if(flagNewNum && pendingOp != "="){}
-                else{
-                    flagNewNum = true;
-
-                    if(pendingOp == "+"){
-                        accum += parseFloat(readOut);
-                    }
-                    else if(pendingOp == "-"){
-                        accum -= parseFloat(readOut);
-                    }
-                    else if(pendingOp == "*"){
-                        accum *= parseFloat(readOut);
-                    }
-                    else if(pendingOp == "/"){
-                        accum /= parseFloat(readOut); 
-                    }
-                    else if(pendingOp == "pow"){
-
-                        accum = Math.pow(accum, parseFloat(readOut));
-                    }
-                    else{
-                        accum = parseFloat(readOut);
-                    }
-
-                    keyPad.readOut.value = accum;
-                    pendingOp = op;
-                }
-            }
-
             function display(str){
-                keyPad.showOut.value = str;
-            }
-
-            function cleanEntry(){
                 play();
-                keyPad.readOut.value = "0"
-                flagNewNum = true;
+
+                if(str != '='){
+                    strExp += str;
+                    keyPad.readOut.value = strExp;
+                } else{
+                    keyPad.readOut.value = eval(strExp);
+                    keyPad.showOut.value = strExp;
+                }
             }
 
             function clean(){
-                play();
-                accum = 0;
-                pendingOp = "";
+                strExp = "";
                 keyPad.readOut.value = "0";
-                tempDisplay = "";
                 keyPad.showOut.value = "";
             }
 
-            function decimal(){
-                play();
-                var curReadout = keyPad.readOut.value;
-                if(flagNewNum){
-                    keyPad.readOut.value = '0.';
-                    flagNewNum = false;
-                }
-                else{
-                    if(curReadout.indexOf('.') == -1){
-                        keyPad.readOut.value = curReadout + '.';
-                    }
-                }
-            }
-
-            function negative(){
-                play();
-                keyPad.readOut.value = parseFloat(keyPad.readOut.value) * -1;
-            }
-
-            function sqrt(){
-                play();
-                keyPad.readOut.value = Math.sqrt(parseFloat(keyPad.readOut.value))
-            }
-            
-            function trigono(method){
-                play();
-                //degree to radian 換算
-                var rad = (parseFloat(keyPad.readOut.value)/180) * Math.PI;
-                if(method == 'sin'){
-                    keyPad.readOut.value = Math.sin(rad);
-                }
-                else if(method == 'cos'){
-                    keyPad.readOut.value = Math.cos(rad);
-                }
-                else if(method =='tan'){
-                    keyPad.readOut.value = Math.tan(rad);
-                }               
-            }
+           
 
 
         </script>
