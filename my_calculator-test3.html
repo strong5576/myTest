@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calculator-3</title>
+        <link rel="icon" href="calculator_1.jpg" type="image/jpeg" />
+        <!--rel=>relationship, href=>Hypertext Reference -->
+        <style>
+            table{
+                width: 250px;
+                border: 2px solid black;
+            } 
+           
+            input{
+                width:50px;
+                height: 25px;
+                font-size: 110%;
+            }
+
+            .readOut{
+                width: 98%;
+                text-align: right;
+                font-size: 150%;
+                border-radius: 5px;
+                background-color: #E0FFFF;
+            } 
+
+            .showOut{
+                width: 98%;
+                text-align: right;
+            }
+
+            .btnPlus{
+                width: 50px;
+                height: 55px
+            }
+
+            .btnEqual{
+                background-color: #4169E1;
+                color: white;
+            }
+
+            .btnClean, .btnCleanEntry{
+                background-color: #CD853F;
+                color: white;
+            }  
+        </style>
+    </head>
+    <body>
+        <audio src="audio/click_2.mp3" id="clickAudio" preload="auto"></audio>
+        <form name="keyPad">
+        <table>
+            <tr>
+                <td colspan="5" align="center">
+                    <input type="text" name="showOut" class="showOut" value="" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" align="center">
+                    <input type="text" name="readOut" class="readOut" value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnSin" value="sin" onclick="display('sin')" />
+                </td>
+                <td>
+                    <input type="button" name="btnCos" value="cos" onclick="display('cos')" />
+                </td>
+                <td>
+                    <input type="button" name="btnTan" value="tan" onclick="display('tan')" />
+                </td>
+                <td>
+                    <input type="button" name="btnSqre" value="&#8730;" onclick="display('sqrt')" />
+                </td>
+                <td>
+                    <input type="button" name="btnPw" value="pow" onclick="display('pow')" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnSeven" value="7" onclick="display('7')" />
+                </td>
+                <td>
+                    <input type="button" name="btnEight" value="8" onclick="display('8')" />
+                </td>
+                <td>
+                    <input type="button" name="btnNine" value="9" onclick="display('9')" />
+                </td>
+                <td>
+                    <input type="button" name="btnClean" class="btnClean"  value="C" 
+                        onclick="clean()" />
+                </td>
+                <td>
+                    <input type="button" name="btnCleanEntry"  class="btnCleanEntry" value="CE"             onclick="cleanEntry()" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnFour" value="4" onclick="display('4')" />
+                </td>
+                <td>
+                    <input type="button" name="btnFive" value="5" onclick="display('5')" />
+                </td>
+                <td>
+                    <input type="button" name="btnSix" value="6" onclick="display('6')" />
+                </td>
+                <td>
+                    <input type="button" name="btnMultiply" value="x" onclick="display('*')" />
+                </td>
+                <td>
+                    <input type="button" name="btnDivide" value="&#247;" onclick="display('/')" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnOne" value="1" onclick="display('1')" />
+                </td>
+                <td>
+                    <input type="button" name="btnTwo" value="2" onclick="display('2')" />
+                </td>
+                <td>
+                    <input type="button" name="btnThree" value="3" onclick="display('3')" />
+                </td>
+                <td rowspan="2">
+                    <input type="button" name="btnPlus" class="btnPlus" value="+" 
+                        onclick="display('+')" />
+                </td>
+                <td>
+                    <input type="button" name="btnMinus" value="-" onclick="display('-')" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="btnZero" value="0" onclick="display('0')" />
+                </td>
+                <td>
+                    <input type="button" name="btnDecimal" value="." onclick="display('.')" />
+                </td>
+                <td>
+                    <input type="button" name="btnNeg" value="+/-" onclick="negative()" />
+                </td>
+                <td>
+                    <input type="button" name="btnEqual" value="=" class="btnEqual" 
+                        onclick="display('=')" />
+                </td>
+            </tr>
+        </table>
+        </form>
+        <script type="text/javascript">
+
+            var keyPad = document.keyPad;
+            var strExp = "";
+            var strShow = "";
+
+            function play(){
+                document.getElementById("clickAudio").play();
+            }
+
+            function display(str){
+                play();
+
+                if(str != '='){ //pending
+                    if(str == 'sqrt'){
+
+                    }
+                    
+                    strExp += str;
+                    keyPad.readOut.value = strExp;
+                    
+                } else{
+                    keyPad.readOut.value = eval(strExp);
+                    keyPad.showOut.value = strExp;
+                }
+            }
+
+            function clean(){
+                strExp = "";
+                keyPad.readOut.value = "0";
+                keyPad.showOut.value = "";
+            }
+
+           
+
+
+        </script>
+    </body>
+</html>
