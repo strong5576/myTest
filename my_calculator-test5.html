@@ -81,6 +81,23 @@
                 </td>
             </tr>
             <tr>
+                    <td>
+                        <input type="button" name="btnRecip" value="1/x" onclick="transfer('1/x')" />
+                    </td>
+                    <td>
+                        <input type="button" name="btnPi" value="π" onclick="transfer('π')" />
+                    </td>
+                    <td>
+                        <input type="button" name="btnE" value="e" onclick="transfer('e')" />
+                    </td>
+                    <td>
+                        <input type="button" name="btnLog" value="log" onclick="operation('log')" />
+                    </td>
+                    <td>
+                        <input type="button" name="btnLn" value="ln" onclick="operation('ln')" />
+                    </td>
+            </tr>
+            <tr>
                 <td>
                     <input type="button" name="btnSin" value="sin" onclick="operation('sin')" />
                 </td>
@@ -158,7 +175,7 @@
                     <input type="button" name="btnDecimal" value="." onclick="decimal()" />
                 </td>
                 <td>
-                    <input type="button" name="btnNeg" value="+/-" onclick="negative()" />
+                    <input type="button" name="btnNeg" value="+/-" onclick="transfer('+/-')" />
                 </td>
                 <td>
                     <input type="button" name="btnEqual" value="=" class="btnEqual" 
@@ -187,7 +204,7 @@
 
                 showStr += num;
                 display();
-
+                //第二個運算元的第一個數字輸入後，顯示框清除第一個運算元，並顯示第二個運算元
                 if(flagNewNum){
                     keyPad.readOut.value = num;
                     flagNewNum = false;
@@ -209,9 +226,9 @@
                 tempNum = readOut;
                 var tri = document.getElementById("btnMode").value;
                 if(tri == "deg"){
-                    var angle = (parseFloat(keyPad.readOut.value)/180) * Math.PI;
+                    var angle = (parseFloat(readOut)/180) * Math.PI;
                 }else{
-                    var angle = parseFloat(keyPad.readOut.value);
+                    var angle = parseFloat(readOut);
                 }
 
                 if(op != '='){
@@ -222,26 +239,35 @@
                 if(op == "^"){
                     base = tempNum;
                     pendingOp = "^";
-                    flagNewNum = true; //確保下一個數字輸入是新數目
+                    flagNewNum = true; //確保下一個數字輸入是新數目，此處若無設定則 3^3會誤算為 3^33 
                     return; //結束函式，等待接收下一個數目
                 }
 
                 if(op == "√"){
                     pendingOp = "√";
+                    flagNewNum = true;
+                    return;
                 }
 
                 if(op == "sin"){
-                    pendingOp = "sin"
+                    pendingOp = "sin";
+                    flagNewNum = true;
+                    return;
                 }
 
                 if(op == "cos"){
                     pendingOp = "cos";
+                    flagNewNum = true;
+                    return;
                 }
 
                 if(op == "tan"){
                     pendingOp = "tan";
+                    flagNewNum = true;
+                    return;
                 }
-                
+                //如連續按兩下'+'('-','*','/'), 則第二個'+'不動作
+				//按第一次'+'後flagNewNum為true，再按第二次'+'則符合以上條件，什麼都不做。
                 if(flagNewNum && pendingOp != "="){}
                 else{
                     flagNewNum = true;
@@ -265,7 +291,7 @@
                         accum += Math.sqrt(readOut);
                     }
                     else if(pendingOp == "sin"){
-                        accum += Math.sin(angle);
+                        accum += parseFloat(Math.sin(angle).toFixed(10)); //小數點取到十位
                     }
                     else if(pendingOp == "cos"){
                         accum += Math.cos(angle);
@@ -308,7 +334,7 @@
                 }                
             }
             */
-
+            // 清除最後輸入的一個數據
             function cleanEntry(){
                 play();
                 
@@ -320,7 +346,7 @@
                     display();
                 }       
             }
-
+            //清除全部數據
             function clean(){
                 play();
 
@@ -330,7 +356,7 @@
                 keyPad.showOut.value = "";
                 showStr = "";
             }
-
+            //小數點
             function decimal(){
                 play();
 
@@ -339,21 +365,42 @@
 
                 var curReadout = keyPad.readOut.value;
                 if(flagNewNum){
-                    keyPad.readOut.value = '0.';
-                    showStr = showStr.slice(0,-1); //除去字串的最後一個字元
+                    keyPad.readOut.value = '0.';  //第二個運算子若僅打 .3 則顯示 0.3
+                    showStr = showStr.slice(0,-1);  //除去字串的最後一個字元
                     showStr += '0.';
                     flagNewNum = false;
                 }
                 else{
+                    //indexOf() 如果要檢索的字符串值沒有出現，則該方法返回 -1
+					//若運算子內無小數點則在尾端加上小數點，若已有小數點則什麼都不做
                     if(curReadout.indexOf('.') == -1){
                         keyPad.readOut.value = curReadout + '.';
                     }
                 }
             }
 
-            function negative(){
+            function transfer(str){
                 play();
-                keyPad.readOut.value = parseFloat(keyPad.readOut.value) * -1;
+
+                if(str == "+/-"){
+                    keyPad.readOut.value = parseFloat(keyPad.readOut.value) * -1;
+                    showStr = keyPad.readOut.value;
+                    display();
+                }else if(str =="1/x"){
+                    keyPad.readOut.value = 1 / (parseFloat(keyPad.readOut.value));
+                    showStr = keyPad.readOut.value;
+                    display();
+                }else if(str == 'π'){
+                    keyPad.readOut.value = Math.PI;
+                    showStr += str;
+                    display();
+                }else{
+                    keyPad.readOut.value = Math.E;
+                    showStr += str;
+                    display();
+                }
+                flagNewNum = false; //等同於用 numPressed()輸入數字， 可避免進入 operation() 內 
+                                    //  if(flagNewNum && pendingOp != "="){} 
             }
             /*
             function sqrt(){
