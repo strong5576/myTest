@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Calculator-1</title>
+        <meta charset="utf-8" /> 
         <link rel="icon" href="calculator_1.jpg" type="image/jpeg" />
         <!--rel=>relationship, href=>Hypertext Reference -->
         <style>
@@ -65,16 +66,16 @@
             </tr>
             <tr>
                 <td>
-                    <input type="button" name="m+" value="M+" />
+                    <input type="button" name="m+" value="M+" onclick="memory('M+')" />
                 </td>
                 <td>
-                    <input type="button" name="m-" value="M-" />
+                    <input type="button" name="m-" value="M-" onclick="memory('M-')" />
                 </td>
                 <td>
-                    <input type="button" name="mr" value="MR" />
+                    <input type="button" name="mr" value="MR" onclick="memory('MR')" />
                 </td>
                 <td>
-                    <input type="button" name="mc" value="MC" />
+                    <input type="button" name="mc" value="MC" onclick="memory('MC')" />
                 </td>
                 <td>
                     <input type="button" name="btnMode" id="btnMode" value="deg" onclick="changeMode()" />
@@ -187,6 +188,7 @@
         <script type="text/javascript">
 
             var keyPad = document.keyPad;
+            var readOut = document.getElementsByClassName("readOut");
             var accum = 0;
             var flagNewNum = false;
             var pendingOp = "";
@@ -194,6 +196,8 @@
             var tempStr = "";
             var tempNum = "";
             var base;
+            var memoNum = 0;
+            var memoStr = "";
 
             function play(){
                 document.getElementById("clickAudio").play();
@@ -222,7 +226,7 @@
             function operation(op){
                 play();
 
-                var readOut = keyPad.readOut.value;
+                //var readOut = keyPad.readOut.value;
                 tempNum = readOut;
                 var tri = document.getElementById("btnMode").value;
                 if(tri == "deg"){
@@ -266,6 +270,19 @@
                     flagNewNum = true;
                     return;
                 }
+
+                if(op == "log"){
+                    pendingOp = "log";
+                    flagNewNum = true;
+                    return;
+                }
+
+                if(op == 'ln'){
+                    pendingOp = 'ln';
+                    flagNewNum = true;
+                    return;
+                }
+               
                 //如連續按兩下'+'('-','*','/'), 則第二個'+'不動作
 				//按第一次'+'後flagNewNum為true，再按第二次'+'則符合以上條件，什麼都不做。
                 if(flagNewNum && pendingOp != "="){}
@@ -298,6 +315,12 @@
                     }
                     else if(pendingOp == "tan"){
                         accum += Math.tan(angle);
+                    }
+                    else if(pendingOp == "log"){
+                        accum += Math.log10(readOut);
+                    }
+                    else if(pendingOp == "ln"){
+                        accum += Math.log(readOut);
                     }
                     else{
                         accum = parseFloat(readOut);
@@ -401,6 +424,40 @@
                 }
                 flagNewNum = false; //等同於用 numPressed()輸入數字， 可避免進入 operation() 內 
                                     //  if(flagNewNum && pendingOp != "="){} 
+            }
+
+            function memory(str){
+                play();
+
+            //var readOut = keyPad.readOut.value;
+                alert(readOut);
+                if(str == 'M+'){
+                    alert(keyPad.readOut.value);
+                    memoNum += parseFloat(readOut);
+                   
+                    if(memoStr == ''){
+                        memoStr += readOut;
+                        
+                    }else{
+                        memoStr += ("+" + readOut );
+                    }                    
+                }else if(str == 'M-'){
+                    memoNum -= parseFloat(readOut);
+                    if(memoStr == ''){
+                        memoStr += readOut;
+                    }else{
+                        memoStr += ("-" + readOut);
+                    }                   
+                }else if(str == 'MR'){
+                    keyPad.readOut.value = memoNum;
+                    keyPad.showOut.value = memoStr;
+                }else if(str == 'MC'){
+                    memoNum = 0;
+                    memoStr = "";
+                    keyPad.readOut.value = memoNum;
+                    keyPad.showOut.value = memoStr;
+                }
+                flagNewNum = false;
             }
             /*
             function sqrt(){
