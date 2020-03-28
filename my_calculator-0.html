@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>My Calculator</title>
+		<link rel="icon" href="calculator.jpg" type="image/jpeg" />
+		<style> 
+			.readOut {
+				width: 90%;
+				text-align: right;
+				padding-right: 10px;
+				font-size: 200%;
+				background-color: #B9D873;
+				color: black;
+				margin-top: 15px;
+			}
+			table {
+				width: 250px;
+				border-style: none;
+				border-collapse: collapse;
+				background-color: #111111;
+			}
+			input {
+				width: 50px;
+				height: 50px;
+				margin:5px;
+				font-size: 150%;
+				background-color: #4E5658;
+				color: white;
+				border-radius: 10px;
+			}
+			.btnPlus {
+				width: 50px;
+				height: 110px;
+			}
+			.btnClean, .btnCleanEntry {
+				background-color: #C00000;
+			}
+		</style>
+	</head>
+	<body>
+		<!--按鍵聲音設定-->
+		<audio src="audio/click_1.mp3" id="clickAudio_1" preload="auto"></audio>
+		<audio src="audio/click_2.mp3" id="clickAudio_2" preload="auto"></audio>
+		<form name="keyPad">
+		<table>
+			<tr>
+				<td colspan="5" align="center">
+					<input type="text" name="readOut" width="100%" value="0" class="readOut" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50">
+					<input type="button" name="btnHex" value="hex" onclick="hexChange()" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnOct" value="oct" onclick="octChange()" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnBin" value="bin" onclick="binChange()" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnPercent" value="%" onclick="percent()" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnSqrt" value="&#8730;" onclick="st()" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50">
+					<input type="button" name="btnSeven" value="7" onclick="numPressed(7)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnEight" value="8" onclick="numPressed(8)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnNine" value="9" onclick="numPressed(9)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnClean" value="C" class="btnClean" 
+						onclick="clean()" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnCleanEntry" value="CE" class="btnCleanEntry"
+						onclick="cleanEntry()" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50">
+					<input type="button" name="btnFour" value="4" onclick="numPressed(4)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnFive" value="5" onclick="numPressed(5)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnSix" value="6" onclick="numPressed(6)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnMultiply" value="x" onclick="operation('*')" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnDivide" value="&#247;" onclick="operation('/')" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50">
+					<input type="button" name="btnOne" value="1" onclick="numPressed(1)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnTwo" value="2" onclick="numPressed(2)" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnThree" value="3" onclick="numPressed(3)" />
+				</td>
+				<td width="50" rowspan="2">
+					<input type="button" name="btnPlus" class="btnPlus" value="+" 
+						onclick="operation('+')" />
+				</td>
+				<td width="50">
+					<input type="button" name="btnMinus" value="-" onclick="operation('-')" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50">
+					<input type="button" name="btnZero" value="0" onclick="numPressed(0)" />
+				</td>
+				<td>
+					<input type="button" name="btnDecimal" value="." onclick="decimal()" />
+				</td>
+				<td>
+					<input type="button" name="btnNeg" value="+/-" onclick="neg()" />
+				</td>
+				<td>
+					<input type="button" name="btnEqual" value="=" onclick="operation('=')" />
+				</td>
+			</tr>
+		</table>
+		</form>
+		<script type="text/javascript">
+
+			var keyPad = document.keyPad;
+			var accum = 0;
+			var flagNewNum = false;
+			var pendingOp = "";
+			
+			//輸入數字時走這裡
+			function numPressed(num)
+			{
+				document.getElementById("clickAudio_1").play() //發出聲音				
+				if(flagNewNum)
+				{
+					//第二個運算元的第一個數字輸入後，顯示框清除第一個運算元，並顯示第二個運算元
+					keyPad.readOut.value = num;
+					flagNewNum = false;
+				}
+				else
+				{
+					if(keyPad.readOut.value == '0')
+					{
+						keyPad.readOut.value = num;
+					}
+					else
+					{
+						keyPad.readOut.value += num;	// 字串相加
+					}
+				}
+			}
+			//輸入 '+', '-', '*', '/', '=' 時走這裡
+			function operation(op)	// 這裡是本程式的重點
+			{
+				document.getElementById("clickAudio_1").play()
+				var readOut = keyPad.readOut.value;
+				if(flagNewNum && pendingOp != '='){} //如連續按兩下'+'('-','*','/'), 則第二個'+'不動作
+				//按第一次'+'後flagNewNum為true，再按第二次'+'則符合以上條件，什麼都不做。
+				else
+				{
+					flagNewNum = true;
+
+					if(pendingOp == '+')
+						accum += parseFloat(readOut);
+					else if(pendingOp == '-')
+						accum -= parseFloat(readOut);
+					else if(pendingOp == '*')
+						accum *= parseFloat(readOut);
+					else if(pendingOp == '/')
+						accum /= parseFloat(readOut);
+					else
+						accum = parseFloat(readOut);
+
+					keyPad.readOut.value = accum;
+
+					pendingOp = op;
+					
+				}
+			}
+			// 清除最後輸入的一個數據
+			function cleanEntry()	
+			{
+				document.getElementById("clickAudio_2").play()
+				keyPad.readOut.value = '0';
+				flagNewNum = true;
+			}
+			//清除全部數據
+			function clean()	
+			{
+				document.getElementById("clickAudio_2").play()
+				accum = 0;
+				pendingOp = "";
+				cleanEntry();
+			}
+			//小數點
+			function decimal()
+			{
+				document.getElementById("clickAudio_1").play()
+				var curReadOut = keyPad.readOut.value;
+				if(flagNewNum)
+				{
+					curReadOut = "0.";	//第二個運算子若僅打 .3 則顯示 0.3
+					flagNewNum = false;
+				}
+				else
+				{
+					//indexOf() 如果要檢索的字符串值沒有出現，則該方法返回 -1
+					//若運算子內無小數點則在尾端加上小數點，若已有小數點則什麼都不做
+					if(curReadOut.indexOf('.') == -1) 
+						curReadOut += '.';
+				}
+				keyPad.readOut.value = curReadOut;
+			}
+			//取負值
+			function neg()
+			{
+				document.getElementById("clickAudio_1").play()
+				keyPad.readOut.value = parseFloat(keyPad.readOut.value) * -1;
+			}
+			//開根號
+			function st()
+			{
+				document.getElementById("clickAudio_2").play()
+				keyPad.readOut.value = Math.sqrt(parseFloat(keyPad.readOut.value));
+			}
+			//百分比
+			function percent()
+			{
+				document.getElementById("clickAudio_2").play()
+				keyPad.readOut.value = (parseFloat(keyPad.readOut.value) / 100) * parseFloat(accum);
+			}	// 如2-25% = 1.5, 此 25% 是 2的百分之25
+			
+			//10轉16進位
+			function hexChange()
+			{
+				document.getElementById("clickAudio_2").play()
+				var dec;
+				dec = parseFloat(keyPad.readOut.value);
+				keyPad.readOut.value = "Hex: " + dec.toString(16);
+			}
+			//10轉8進位
+			function octChange()
+			{
+				document.getElementById("clickAudio_2").play()
+				var dec;
+				dec = parseFloat(keyPad.readOut.value);
+				keyPad.readOut.value = "Oct: " + dec.toString(8);
+			}
+			//10轉2進位
+			function binChange()
+			{
+				document.getElementById("clickAudio_2").play()
+				var dec;
+				dec = parseFloat(keyPad.readOut.value);
+				keyPad.readOut.value = "Bin: " + dec.toString(2);
+			}
+
+		</script>
+	</body>
+</html>
