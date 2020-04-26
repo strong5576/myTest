@@ -4,7 +4,23 @@
         <title>My Test Page</title>
         <script src="jquery-1.4.2.min.js"></script>
         <script type="text/javascript">
+            $(document).ready(function(){
+               // alert($('img').attr('alt'));
+               //var pContent = $('p').text()
+               //alert(pContent);
+               $('img').attr({src:'calculator.png', alt:'another picture'});
+            });
+            
             
         </script>
     </head>
+    <body>
+        <strong>This is my test page</strong>
+        <p>This is some text.</p>
+
+
+
+        <img src="calculator_1.jpg" height="150" width="150"   
+         alt="This is a test image.">
+    </body>
 </html>
